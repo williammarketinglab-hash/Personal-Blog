@@ -47,17 +47,17 @@ export default function BookingPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>姓名</label>
-                            <input required type="text" className="glass" style={{ width: '100%', padding: '0.8rem', boxSizing: 'border-box' }} placeholder="您的稱呼" />
+                            <input required type="text" className="glass" style={{ width: '100%', padding: '0.8rem', boxSizing: 'border-box', color: '#ffffff' }} placeholder="您的稱呼" />
                         </div>
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Email</label>
-                            <input required type="email" className="glass" style={{ width: '100%', padding: '0.8rem', boxSizing: 'border-box' }} placeholder="contact@example.com" />
+                            <input required type="email" className="glass" style={{ width: '100%', padding: '0.8rem', boxSizing: 'border-box', color: '#ffffff' }} placeholder="contact@example.com" />
                         </div>
                     </div>
 
                     <div>
                         <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>諮詢主題</label>
-                        <select className="glass" style={{ width: '100%', padding: '0.8rem', boxSizing: 'border-box', color: 'var(--text-primary)' }}>
+                        <select className="glass" style={{ width: '100%', padding: '0.8rem', boxSizing: 'border-box', color: '#ffffff' }}>
                             <option value="consulting">品牌數位成長顧問</option>
                             <option value="ads">廣告代操優化</option>
                             <option value="content">內容行銷整合</option>
@@ -67,7 +67,7 @@ export default function BookingPage() {
 
                     <div>
                         <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>目前遇到的挑戰 / 需求描述</label>
-                        <textarea required rows={5} className="glass" style={{ width: '100%', padding: '0.8rem', boxSizing: 'border-box', fontFamily: 'inherit' }} placeholder="請簡述您目前的業務狀況與想解決的問題..." />
+                        <textarea required rows={5} className="glass" style={{ width: '100%', padding: '0.8rem', boxSizing: 'border-box', fontFamily: 'inherit', color: '#ffffff' }} placeholder="請簡述您目前的業務狀況與想解決的問題..." />
                     </div>
 
                     <button type="submit" className="btn-primary" style={{ justifyContent: 'center' }}>

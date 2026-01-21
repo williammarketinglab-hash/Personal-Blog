@@ -12,7 +12,7 @@ export default function SubscribePage() {
                 </p>
 
                 <form style={{ display: 'grid', gap: '1rem' }}>
-                    <input type="email" placeholder="name@example.com" className="glass" style={{ padding: '1rem 1.5rem', borderRadius: '12px', fontSize: '1rem', width: '100%' }} />
+                    <input type="email" placeholder="name@example.com" className="glass" style={{ padding: '1rem 1.5rem', borderRadius: '12px', fontSize: '1rem', width: '100%', color: '#ffffff' }} />
                     <button className="btn-primary" style={{ justifyContent: 'center', width: '100%', fontSize: '1.1rem' }}>
                         立即訂閱
                     </button>

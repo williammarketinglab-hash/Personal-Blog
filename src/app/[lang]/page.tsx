@@ -1,12 +1,14 @@
 import { getBlogPosts } from "@/lib/notion";
 import Link from "next/link";
 import { ArrowRight, Mail, Calendar } from "lucide-react";
+import { getDictionary } from "../dictionaries";
 
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   const posts = await getBlogPosts();
+  const dict = await getDictionary(lang);
 
   return (
     <main className="container">
@@ -18,31 +20,31 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           zIndex: -1, pointerEvents: 'none'
         }} />
         <h1 className="title-gradient" style={{ fontSize: '4.5rem', fontWeight: 800, marginBottom: '1.5rem', letterSpacing: '-2px', lineHeight: 1.1 }}>
-          William's<br />Lab
+          {dict.home_hero_title_1}<br />{dict.home_hero_title_2}
         </h1>
         <p style={{ fontSize: '1.5rem', color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto 3rem', lineHeight: 1.6 }}>
-          品牌電商成長顧問 × 科技產業分析。<br />
-          探索 <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>數位增長</span> 與 <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>科技本質</span> 的實驗室。
+          {dict.home_hero_subtitle_1}<br />
+          {dict.home_hero_subtitle_2}
         </p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
           <Link href={`/${lang}/booking`} className="btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
-            <Calendar size={20} style={{ marginRight: '8px' }} /> 預約諮詢
+            <Calendar size={20} style={{ marginRight: '8px' }} /> {dict.home_hero_cta_booking}
           </Link>
           <Link href={`/${lang}/subscribe`} className="glass" style={{ padding: '1rem 2rem', borderRadius: '50px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid var(--glass-border)', color: 'var(--text-primary)' }}>
-            <Mail size={20} /> 訂閱週報
+            <Mail size={20} /> {dict.home_hero_cta_subscribe}
           </Link>
         </div>
       </section>
 
       {/* Categories Grid */}
       <section style={{ marginBottom: '6rem' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '2rem', textAlign: 'center' }}>探索主題</h2>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '2rem', textAlign: 'center' }}>{dict.home_topics_title}</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
           {[
-            { title: '行銷技巧', desc: 'SEO、廣告投放與增長策略', link: `/${lang}/marketing`, color: '#0070f3' },
-            { title: 'AI 科技', desc: '趨勢分析與工具應用', link: `/${lang}/ai-insights`, color: '#7928ca' },
-            { title: '旅遊', desc: '數位遊牧與世界足跡', link: `/${lang}/travel`, color: '#f5a623' },
-            { title: '服飾', desc: '品牌形象與風格指南', link: `/${lang}/fashion`, color: '#ff0080' },
+            { title: dict.marketing, desc: dict.home_topics_marketing_desc, link: `/${lang}/marketing`, color: '#0070f3' },
+            { title: dict.ai_insights, desc: dict.home_topics_ai_desc, link: `/${lang}/ai-insights`, color: '#7928ca' },
+            { title: dict.travel, desc: dict.home_topics_travel_desc, link: `/${lang}/travel`, color: '#f5a623' },
+            { title: dict.apparel, desc: dict.home_topics_fashion_desc, link: `/${lang}/fashion`, color: '#ff0080' },
           ].map((cat) => (
             <Link key={cat.title} href={cat.link} className="glass" style={{ padding: '2rem', borderRadius: '24px', transition: 'all 0.3s', display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--glass-border)' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: cat.color, opacity: 0.8 }} />
@@ -58,8 +60,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       {/* Featured Posts */}
       <section style={{ padding: '4rem 0' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '2rem' }}>最新文章</h2>
-          <Link href={`/${lang}/blog`} style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>看更多文章 →</Link>
+          <h2 style={{ fontSize: '2rem' }}>{dict.home_posts_title}</h2>
+          <Link href={`/${lang}/blog`} style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{dict.home_posts_view_more}</Link>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
@@ -71,7 +73,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '1rem', flexGrow: 1 }}>{post.title}</h3>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                  {new Date(post.createdAt).toLocaleDateString('zh-TW')}
+                  {new Date(post.createdAt).toLocaleDateString(lang === 'zh-TW' ? 'zh-TW' : 'en-US')}
                 </span>
                 <ArrowRight size={16} />
               </div>
@@ -83,11 +85,11 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       {/* Newsletter Section */}
       <section id="newsletter" className="glass" style={{ margin: '6rem 0', padding: '4rem', textAlign: 'center', background: 'linear-gradient(135deg, rgba(0,112,243,0.1) 0%, rgba(0,0,0,0) 100%)' }}>
         <Mail size={40} style={{ color: 'var(--accent-color)', marginBottom: '1.5rem' }} />
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>掌握第一手數位增長情報</h2>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>每週分享 AI 工具與電商增長策略，不錯過任何產業脈動。</p>
+        <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{dict.home_newsletter_title}</h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>{dict.home_newsletter_desc}</p>
         <div style={{ display: 'flex', gap: '0.5rem', maxWidth: '500px', margin: '0 auto' }}>
-          <input type="email" placeholder="你的電子郵件" className="glass" style={{ flexGrow: 1, padding: '1rem 1.5rem', borderRadius: '100px', fontSize: '1rem' }} />
-          <button className="btn-primary">訂閱</button>
+          <input type="email" placeholder={dict.home_newsletter_placeholder} className="glass" style={{ flexGrow: 1, padding: '1rem 1.5rem', borderRadius: '100px', fontSize: '1rem' }} />
+          <button className="btn-primary">{dict.home_newsletter_btn}</button>
         </div>
       </section>
     </main>
