@@ -33,15 +33,12 @@ export default async function TravelPage({ params }: { params: Promise<{ lang: s
                     </Link>
                 ))}
             </div>
-        </div>
-            {
-        posts.length === 0 && (
-            <div className="glass" style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
-                <p>精彩遊記即將上線...</p>
-            </div>
-        )
-    }
 
-        </main >
+            {posts.length === 0 && (
+                <div className="glass" style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-secondary)', marginTop: '2rem' }}>
+                    <p>精彩遊記即將上線...</p>
+                </div>
+            )}
+        </main>
     );
 }

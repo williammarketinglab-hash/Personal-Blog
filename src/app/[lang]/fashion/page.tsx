@@ -34,14 +34,12 @@ export default async function FashionPage({ params }: { params: Promise<{ lang: 
                     </Link>
                 ))}
             </div>
-        </div>
-            {
-        posts.length === 0 && (
-            <div className="glass" style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
-                <p>服飾與品牌內容準備中...</p>
-            </div>
-        )
-    }
-        </main >
+
+            {posts.length === 0 && (
+                <div className="glass" style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-secondary)', marginTop: '2rem' }}>
+                    <p>服飾與品牌內容準備中...</p>
+                </div>
+            )}
+        </main>
     );
 }

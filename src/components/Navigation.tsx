@@ -27,7 +27,10 @@ export default function Navigation({ lang, dict }: NavigationProps) {
 
     useEffect(() => {
         const controlNavbar = () => {
-            const currentScrollY = window.scrollY;
+            const win = typeof window !== 'undefined' ? window : (globalThis as any).window;
+            if (!win) return;
+
+            const currentScrollY = win.scrollY;
 
             if (currentScrollY === 0) {
                 setIsVisible(true);
@@ -46,8 +49,11 @@ export default function Navigation({ lang, dict }: NavigationProps) {
             setLastScrollY(currentScrollY);
         };
 
-        window.addEventListener("scroll", controlNavbar);
-        return () => window.removeEventListener("scroll", controlNavbar);
+        const win = typeof window !== 'undefined' ? window : (globalThis as any).window;
+        if (win) {
+            win.addEventListener("scroll", controlNavbar);
+            return () => win.removeEventListener("scroll", controlNavbar);
+        }
     }, [lastScrollY]);
 
     const navLinks = [
