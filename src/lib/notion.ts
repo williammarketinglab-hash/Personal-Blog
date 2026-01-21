@@ -40,6 +40,38 @@ export async function getBlocks(blockId: string, recursive = true) {
     return blocks;
 }
 
+// Helper to recursively find all child_page blocks (pages)
+export async function getAllChildPages(blockId: string) {
+    const pages: any[] = [];
+    let cursor;
+
+    while (true) {
+        const { results, next_cursor }: any = await notion.blocks.children.list({
+            start_cursor: cursor,
+            block_id: blockId,
+        });
+
+        for (const block of results) {
+            if (block.type === "child_page") {
+                pages.push(block);
+                // Also recursively check inside this page for sub-pages (folders)
+                // Note: This might be expensive for very deep structures, but precise.
+                const subPages = await getAllChildPages(block.id);
+                pages.push(...subPages);
+            } else if (block.has_children) {
+                // If it's a toggle, column, etc., look inside for pages
+                // We use getBlocks logic but focused on finding pages
+                const subPages = await getAllChildPages(block.id);
+                pages.push(...subPages);
+            }
+        }
+
+        if (!next_cursor) break;
+        cursor = next_cursor;
+    }
+    return pages;
+}
+
 export async function getBlogPosts() {
     const categories = [
         { id: process.env.MARKETING_LAB_PAGE_ID, name: "Marketing Skills", label: "行銷技巧" },
@@ -54,18 +86,28 @@ export async function getBlogPosts() {
     for (const category of categories) {
         if (!category.id) continue;
 
-        // Fetch only top-level blocks (pages), DO NOT recurse
-        const blocks = await getBlocks(category.id, false);
-
-        // Filter for child_page blocks which we treat as blog posts
-        const posts = blocks
-            .filter((block: any) => block.type === "child_page")
-            .map((block: any) => ({
+        let posts = [];
+        // For Travel and Apparel, we want deep recursion to find nested pages
+        if (category.name === "Travel" || category.name === "Apparel") {
+            const pages = await getAllChildPages(category.id);
+            posts = pages.map((block: any) => ({
                 id: block.id.replace(/-/g, ""),
                 title: block.child_page.title,
-                category: category.label || category.name, // Use label if available
+                category: category.label || category.name,
                 createdAt: block.created_time,
             }));
+        } else {
+            // For others, keep flat shallow fetch for performance, or switch to recursive if needed
+            const blocks = await getBlocks(category.id, false);
+            posts = blocks
+                .filter((block: any) => block.type === "child_page")
+                .map((block: any) => ({
+                    id: block.id.replace(/-/g, ""),
+                    title: block.child_page.title,
+                    category: category.label || category.name,
+                    createdAt: block.created_time,
+                }));
+        }
 
         allPosts.push(...posts);
     }

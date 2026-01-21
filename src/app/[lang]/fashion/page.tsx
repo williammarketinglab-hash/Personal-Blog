@@ -1,12 +1,25 @@
-import { getBlogPosts } from "@/lib/notion";
+import { getBlogPosts, getBlocks } from "@/lib/notion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { NotionRenderer } from "@/components/NotionRenderer";
 
 export default async function FashionPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
     const allPosts = await getBlogPosts();
     // Filter for Apparel/Fashion category
-    const posts = allPosts.filter(post => post.category === "服飾" || post.category === "Apparel");
+    const posts = allPosts.filter(post => post.category === "服飾" || post.category === "Apparel" || post.category === "Fashion");
+
+    // Fetch intro content (blocks that are NOT child_page)
+    const pageId = process.env.APPAREL_PAGE_ID;
+    let introBlocks: any[] = [];
+    if (pageId) {
+        try {
+            const blocks = await getBlocks(pageId, false);
+            introBlocks = blocks.filter((block: any) => block.type !== "child_page");
+        } catch (e) {
+            console.error("Error fetching fashion intro blocks", e);
+        }
+    }
 
     return (
         <main className="container" style={{ padding: '4rem 2rem' }}>
@@ -18,6 +31,13 @@ export default async function FashionPage({ params }: { params: Promise<{ lang: 
                     品牌形象與風格指南。
                 </p>
             </header>
+
+            {/* Intro Content from Notion */}
+            {introBlocks.length > 0 && (
+                <div className="glass" style={{ padding: '3rem', marginBottom: '4rem' }}>
+                    <NotionRenderer blocks={introBlocks} />
+                </div>
+            )}
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
                 {posts.map((post) => (

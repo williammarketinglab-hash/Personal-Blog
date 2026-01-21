@@ -134,3 +134,12 @@ export const renderBlock = (block: any) => {
             return null;
     }
 };
+
+export const NotionRenderer = ({ blocks }: { blocks: any[] }) => {
+    if (!blocks || !Array.isArray(blocks)) return null;
+    return (
+        <div className="notion-content">
+            {blocks.map((block) => renderBlock(block))}
+        </div>
+    );
+};

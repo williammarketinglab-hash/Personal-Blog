@@ -1,11 +1,20 @@
-import { getBlogPosts } from "@/lib/notion";
+import { getBlogPosts, getBlocks } from "@/lib/notion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { NotionRenderer } from "@/components/NotionRenderer";
 
 export default async function TravelPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
     const allPosts = await getBlogPosts();
     const posts = allPosts.filter(post => post.category === "旅遊" || post.category === "Travel");
+
+    // Fetch intro content (blocks that are NOT child_page)
+    const pageId = process.env.TRAVEL_PAGE_ID;
+    let introBlocks: any[] = [];
+    if (pageId) {
+        const blocks = await getBlocks(pageId, false); // shallow fetch for top level content
+        introBlocks = blocks.filter((block: any) => block.type !== "child_page");
+    }
 
     return (
         <main className="container" style={{ padding: '4rem 2rem' }}>
@@ -17,6 +26,13 @@ export default async function TravelPage({ params }: { params: Promise<{ lang: s
                     數位遊牧與世界足跡。
                 </p>
             </header>
+
+            {/* Intro Content from Notion */}
+            {introBlocks.length > 0 && (
+                <div className="glass" style={{ padding: '3rem', marginBottom: '4rem' }}>
+                    <NotionRenderer blocks={introBlocks} />
+                </div>
+            )}
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
                 {posts.map((post) => (
