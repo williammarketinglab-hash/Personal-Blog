@@ -4,6 +4,7 @@ import { getDictionary } from "../dictionaries";
 import "../globals.css";
 
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "William's Digital Growth & Tech Lab",

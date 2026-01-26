@@ -85,7 +85,7 @@ export default async function TravelPage({ params }: { params: Promise<{ lang: s
                 </h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
                     {travelPosts.length > 0 ? (
-                        travelPosts.map((post) => (
+                        travelPosts.slice(0, 6).map((post) => (
                             <Link key={post.id} href={`/${lang}/blog/${post.id}`} className="glass" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', transition: 'all 0.3s' }}>
                                 <span style={{ fontSize: '0.8rem', color: 'var(--accent-color)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
                                     Travel

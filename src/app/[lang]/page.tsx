@@ -46,10 +46,12 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             { title: dict.travel, desc: dict.home_topics_travel_desc, link: `/${lang}/travel`, color: '#f5a623' },
             { title: dict.apparel, desc: dict.home_topics_fashion_desc, link: `/${lang}/fashion`, color: '#ff0080' },
           ].map((cat) => (
-            <Link key={cat.title} href={cat.link} className="glass" style={{ padding: '2rem', borderRadius: '24px', transition: 'all 0.3s', display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--glass-border)' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: cat.color, opacity: 0.8 }} />
+            <Link key={cat.title} href={cat.link} className="glass" style={{ padding: '2rem', borderRadius: '24px', transition: 'all 0.3s', display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--glass-border)', textAlign: 'center', alignItems: 'center' }}>
+              <div style={{ width: '60px', height: '60px', borderRadius: '16px', background: cat.color, opacity: 0.1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: cat.color }} />
+              </div>
               <div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>{cat.title}</h3>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem', color: cat.color }}>{cat.title}</h3>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.5 }}>{cat.desc}</p>
               </div>
             </Link>
