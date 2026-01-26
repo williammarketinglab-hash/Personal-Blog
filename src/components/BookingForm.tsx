@@ -45,7 +45,7 @@ export default function BookingForm({ dict, lang }: { dict: BookingDict, lang: s
                     <p style={{ color: 'var(--text-secondary)' }}>
                         {dict.booking_success_desc}
                     </p>
-                    <Link href={`/${lang}`} className="btn-primary" style={{ marginTop: '2rem' }}>{dict.booking_success_btn}</Link>
+                    <a href={`/${lang}`} className="btn-primary" style={{ marginTop: '2rem', display: 'inline-flex', textDecoration: 'none' }}>{dict.booking_success_btn}</a>
                 </div>
             </main>
         );
