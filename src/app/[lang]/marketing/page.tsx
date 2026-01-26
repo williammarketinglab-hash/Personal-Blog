@@ -1,11 +1,13 @@
 import { getBlogPosts } from "@/lib/notion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { getDictionary } from "../../dictionaries";
 
 export const revalidate = 3600;
 
 export default async function MarketingPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
+    const dict = await getDictionary(lang);
     const allPosts = await getBlogPosts();
     const posts = allPosts.filter(post => post.category === "行銷技巧");
 
@@ -13,10 +15,10 @@ export default async function MarketingPage({ params }: { params: Promise<{ lang
         <main className="container" style={{ padding: '4rem 2rem' }}>
             <header style={{ marginBottom: '4rem', textAlign: 'center' }}>
                 <h1 className="title-gradient" style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '1.5rem' }}>
-                    行銷技巧
+                    {dict.marketing}
                 </h1>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
-                    拆解創業必備的行銷思維，從 SEO 到廣告投放的實戰指南。
+                    {dict.marketing_subtitle}
                 </p>
             </header>
 
@@ -29,7 +31,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ lang
                         <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '1rem', flexGrow: 1 }}>{post.title}</h3>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                             <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                {new Date(post.createdAt).toLocaleDateString('zh-TW')}
+                                {new Date(post.createdAt).toLocaleDateString(lang === 'zh' ? 'zh-TW' : 'en-US')}
                             </span>
                             <ArrowRight size={16} />
                         </div>

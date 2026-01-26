@@ -2,9 +2,11 @@ import { getBlogPosts, getBlocks } from "@/lib/notion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { NotionRenderer } from "@/components/NotionRenderer";
+import { getDictionary } from "../../dictionaries";
 
 export default async function FashionPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
+    const dict = await getDictionary(lang);
     const allPosts = await getBlogPosts();
     // Filter for Apparel/Fashion category
     const posts = allPosts.filter(post => post.category === "服飾" || post.category === "Apparel" || post.category === "Fashion");
@@ -25,10 +27,10 @@ export default async function FashionPage({ params }: { params: Promise<{ lang: 
         <main className="container" style={{ padding: '4rem 2rem' }}>
             <header style={{ marginBottom: '4rem', textAlign: 'center' }}>
                 <h1 className="title-gradient" style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '1.5rem' }}>
-                    服飾
+                    {dict.apparel}
                 </h1>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
-                    品牌形象與風格指南。
+                    {dict.fashion_subtitle}
                 </p>
             </header>
 
@@ -43,12 +45,12 @@ export default async function FashionPage({ params }: { params: Promise<{ lang: 
                 {posts.map((post) => (
                     <Link key={post.id} href={`/${lang}/blog/${post.id}`} className="glass" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', transition: 'all 0.3s' }}>
                         <span style={{ fontSize: '0.8rem', color: 'var(--accent-color)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-                            Fashion
+                            {dict.apparel}
                         </span>
                         <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '1rem', flexGrow: 1 }}>{post.title}</h3>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                             <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                {new Date(post.createdAt).toLocaleDateString('zh-TW')}
+                                {new Date(post.createdAt).toLocaleDateString(lang === 'zh' ? 'zh-TW' : 'en-US')}
                             </span>
                         </div>
                     </Link>
@@ -57,7 +59,7 @@ export default async function FashionPage({ params }: { params: Promise<{ lang: 
 
             {posts.length === 0 && (
                 <div className="glass" style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-secondary)', marginTop: '2rem' }}>
-                    <p>服飾與品牌內容準備中...</p>
+                    <p>{dict.fashion_empty}</p>
                 </div>
             )}
         </main>
