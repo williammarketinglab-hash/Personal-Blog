@@ -2,6 +2,8 @@
 
 import { Mail, CheckCircle } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 // Helper Interface (similar to BookingForm)
 // Ideally this should be imported or shared, but keeping it simple for now to avoid circular deps with server files
@@ -20,6 +22,8 @@ interface SubscribeDict {
 
 export default function SubscribeForm({ dict }: { dict: SubscribeDict }) {
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+    const params = useParams();
+    const lang = params?.lang as string || 'zh-TW';
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,13 +45,13 @@ export default function SubscribeForm({ dict }: { dict: SubscribeDict }) {
                         <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', fontSize: '1.1rem' }}>
                             {dict.subscribe_success_desc}
                         </p>
-                        <button
-                            onClick={() => setStatus('idle')}
+                        <Link
+                            href={`/${lang}`}
                             className="btn-primary"
-                            style={{ justifyContent: 'center', width: '100%', fontSize: '1.1rem', background: 'transparent', border: '1px solid var(--accent-color)', color: 'var(--accent-color)' }}
+                            style={{ display: 'inline-flex', justifyContent: 'center', width: '100%', fontSize: '1.1rem', background: 'transparent', border: '1px solid var(--accent-color)', color: 'var(--accent-color)', textDecoration: 'none', boxSizing: 'border-box' }}
                         >
                             {dict.subscribe_success_btn}
-                        </button>
+                        </Link>
                     </div>
                 ) : (
                     <>
