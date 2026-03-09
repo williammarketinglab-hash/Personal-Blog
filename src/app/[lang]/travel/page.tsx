@@ -4,6 +4,8 @@ import { Map, ArrowRight } from "lucide-react";
 import { NotionRenderer } from "@/components/NotionRenderer";
 import { getDictionary } from "../../dictionaries";
 
+export const revalidate = 60;
+
 export default async function TravelPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
     const dict = await getDictionary(lang);

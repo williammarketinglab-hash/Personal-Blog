@@ -51,20 +51,24 @@ export async function getAllChildPages(blockId: string) {
             block_id: blockId,
         });
 
-        for (const block of results) {
+        const childPromises = results.map(async (block: any) => {
+            const currentPages = [];
             if (block.type === "child_page") {
-                pages.push(block);
+                currentPages.push(block);
                 // Also recursively check inside this page for sub-pages (folders)
-                // Note: This might be expensive for very deep structures, but precise.
                 const subPages = await getAllChildPages(block.id);
-                pages.push(...subPages);
+                currentPages.push(...subPages);
             } else if (block.has_children) {
                 // If it's a toggle, column, etc., look inside for pages
                 // We use getBlocks logic but focused on finding pages
                 const subPages = await getAllChildPages(block.id);
-                pages.push(...subPages);
+                currentPages.push(...subPages);
             }
-        }
+            return currentPages;
+        });
+
+        const resolvedPages = await Promise.all(childPromises);
+        pages.push(...resolvedPages.flat());
 
         if (!next_cursor) break;
         cursor = next_cursor;
@@ -83,8 +87,8 @@ export async function getBlogPosts() {
 
     const allPosts = [];
 
-    for (const category of categories) {
-        if (!category.id) continue;
+    const categoryPromises = categories.map(async (category) => {
+        if (!category.id) return [];
 
         // Use deep recursion to find nested pages for all categories
         const pages = await getAllChildPages(category.id);
@@ -95,8 +99,11 @@ export async function getBlogPosts() {
             createdAt: block.created_time,
         }));
 
-        allPosts.push(...posts);
-    }
+        return posts;
+    });
+
+    const allPostsArrays = await Promise.all(categoryPromises);
+    allPosts.push(...allPostsArrays.flat());
 
     return allPosts.sort((a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

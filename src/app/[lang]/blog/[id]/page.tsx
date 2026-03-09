@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Clock, Tag } from "lucide-react";
 import Link from "next/link";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function PostPage({ params }: { params: Promise<{ lang: string; id: string }> }) {
     const { lang, id } = await params;

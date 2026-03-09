@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getDictionary } from "../../dictionaries";
 
+export const revalidate = 60;
+
 export default async function AiInsightsPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
     const dict = await getDictionary(lang);

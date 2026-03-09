@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getDictionary } from "../../dictionaries";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function MarketingPage({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;

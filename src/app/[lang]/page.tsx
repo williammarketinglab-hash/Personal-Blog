@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Mail, Calendar } from "lucide-react";
 import { getDictionary } from "../dictionaries";
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 60; // Revalidate every minute
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;

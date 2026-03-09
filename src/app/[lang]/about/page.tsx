@@ -40,6 +40,16 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
                     </blockquote>
                 </section>
 
+                <section className="glass" style={{ padding: '3rem', marginBottom: '4rem', textAlign: 'center' }}>
+                    <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>聯絡資訊</h2>
+                    <p style={{ fontSize: '1.2rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>
+                        <strong>LINE 諮詢：</strong> @296cpxdz
+                    </p>
+                    <p style={{ fontSize: '1.2rem', color: 'var(--text-primary)' }}>
+                        <strong>Email 聯繫：</strong> william.marketinglab@gmail.com
+                    </p>
+                </section>
+
                 <section>
                     <h2 style={{ fontSize: '2rem', marginBottom: '2rem', borderLeft: '4px solid var(--accent-color)', paddingLeft: '1rem' }}>
                         {dict.about_experience_title}
