@@ -11,6 +11,7 @@
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.8.0",
     "@notionhq/client": "^5.7.0",
+    "@supabase/supabase-js": "^2.99.0",
     "@types/negotiator": "^0.6.4",
     "dotenv": "^17.2.3",
     "lucide-react": "^0.562.0",
