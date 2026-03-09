@@ -1,6 +1,7 @@
-import { getBlogPosts } from "@/lib/notion";
+import { getBlogPosts, getBlocks } from "@/lib/notion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { NotionRenderer } from "@/components/NotionRenderer";
 import { getDictionary } from "../../dictionaries";
 
 export const revalidate = 60;
@@ -9,7 +10,18 @@ export default async function MarketingPage({ params }: { params: Promise<{ lang
     const { lang } = await params;
     const dict = await getDictionary(lang);
     const allPosts = await getBlogPosts();
-    const posts = allPosts.filter(post => post.category === "行銷技巧");
+    const posts = allPosts.filter((post: any) => post.category === "行銷技巧" || post.category === "Marketing Skills");
+
+    const pageId = process.env.MARKETING_LAB_PAGE_ID;
+    let introBlocks: any[] = [];
+    if (pageId) {
+        try {
+            const blocks = await getBlocks(pageId, false);
+            introBlocks = blocks.filter((block: any) => block.type !== "child_page");
+        } catch (e) {
+            console.error("Error fetching marketing intro blocks", e);
+        }
+    }
 
     return (
         <main className="container" style={{ padding: '4rem 2rem' }}>
@@ -21,6 +33,13 @@ export default async function MarketingPage({ params }: { params: Promise<{ lang
                     {dict.marketing_subtitle}
                 </p>
             </header>
+
+            {/* Intro Content from Notion */}
+            {introBlocks.length > 0 && (
+                <div className="glass" style={{ padding: '3rem', marginBottom: '4rem' }}>
+                    <NotionRenderer blocks={introBlocks} />
+                </div>
+            )}
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
                 {posts.map((post) => (

@@ -15,11 +15,13 @@ export default async function TravelPage({ params }: { params: Promise<{ lang: s
     // Fetch continent links (nested pages in Notion)
     const pageId = process.env.TRAVEL_PAGE_ID;
     let continentBlocks: any[] = [];
+    let introBlocks: any[] = [];
     if (pageId) {
         try {
             const blocks = await getBlocks(pageId, false);
             // In Travel page, child_page blocks are continents/countries
             continentBlocks = blocks.filter((block: any) => block.type === "child_page");
+            introBlocks = blocks.filter((block: any) => block.type !== "child_page");
         } catch (e) {
             console.error("Error fetching travel blocks", e);
         }
@@ -37,6 +39,13 @@ export default async function TravelPage({ params }: { params: Promise<{ lang: s
                         {dict.travel_subtitle}
                     </p>
                 </header>
+
+                {/* Intro Content from Notion */}
+                {introBlocks.length > 0 && (
+                    <div className="glass" style={{ padding: '3rem', marginBottom: '4rem' }}>
+                        <NotionRenderer blocks={introBlocks} />
+                    </div>
+                )}
 
                 {/* Continents Grid */}
                 <section style={{ marginBottom: '6rem' }}>
