@@ -51,24 +51,19 @@ export async function getAllChildPages(blockId: string) {
             block_id: blockId,
         });
 
-        const childPromises = results.map(async (block: any) => {
-            const currentPages = [];
+        for (const block of results) {
             if (block.type === "child_page") {
-                currentPages.push(block);
+                pages.push(block);
                 // Also recursively check inside this page for sub-pages (folders)
                 const subPages = await getAllChildPages(block.id);
-                currentPages.push(...subPages);
+                pages.push(...subPages);
             } else if (block.has_children) {
                 // If it's a toggle, column, etc., look inside for pages
                 // We use getBlocks logic but focused on finding pages
                 const subPages = await getAllChildPages(block.id);
-                currentPages.push(...subPages);
+                pages.push(...subPages);
             }
-            return currentPages;
-        });
-
-        const resolvedPages = await Promise.all(childPromises);
-        pages.push(...resolvedPages.flat());
+        }
 
         if (!next_cursor) break;
         cursor = next_cursor;

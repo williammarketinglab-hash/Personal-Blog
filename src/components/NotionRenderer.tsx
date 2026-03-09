@@ -26,7 +26,16 @@ const Text = ({ title }: { title: any[] }) => {
                             fontFamily: code ? 'monospace' : 'inherit',
                         }}
                     >
-                        {text.link ? <a href={text.link.url} style={{ color: 'var(--accent-color)' }}>{text.content}</a> : text.content}
+                        {text.link ? (() => {
+                            let href = text.link.url;
+                            if (href.includes('notion.so') || href.startsWith('/')) {
+                                const match = href.match(/([a-f0-9]{32}|[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i);
+                                if (match) {
+                                    href = `/blog/${match[1].replace(/-/g, '')}`;
+                                }
+                            }
+                            return <a href={href} style={{ color: 'var(--accent-color)' }}>{text.content}</a>;
+                        })() : text.content}
                     </span>
                 );
             })}
@@ -129,6 +138,14 @@ export const renderBlock = (block: any) => {
                     <img src={src} alt={caption} style={{ width: '100%', borderRadius: '16px', display: 'block' }} />
                     {caption && <figcaption style={{ textAlign: 'center', marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{caption}</figcaption>}
                 </figure>
+            );
+        case 'link_to_page':
+            return (
+                <div key={id} style={{ margin: '1rem 0' }}>
+                    <a href={`/blog/${value.page_id.replace(/-/g, "")}`} style={{ color: 'var(--accent-color)', textDecoration: 'underline', fontWeight: 600 }}>
+                        🔗 前往相關文章
+                    </a>
+                </div>
             );
         default:
             return null;
