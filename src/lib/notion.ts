@@ -86,28 +86,14 @@ export async function getBlogPosts() {
     for (const category of categories) {
         if (!category.id) continue;
 
-        let posts = [];
-        // For Travel and Apparel, we want deep recursion to find nested pages
-        if (category.name === "Travel" || category.name === "Apparel") {
-            const pages = await getAllChildPages(category.id);
-            posts = pages.map((block: any) => ({
-                id: block.id.replace(/-/g, ""),
-                title: block.child_page.title,
-                category: category.label || category.name,
-                createdAt: block.created_time,
-            }));
-        } else {
-            // For others, keep flat shallow fetch for performance, or switch to recursive if needed
-            const blocks = await getBlocks(category.id, false);
-            posts = blocks
-                .filter((block: any) => block.type === "child_page")
-                .map((block: any) => ({
-                    id: block.id.replace(/-/g, ""),
-                    title: block.child_page.title,
-                    category: category.label || category.name,
-                    createdAt: block.created_time,
-                }));
-        }
+        // Use deep recursion to find nested pages for all categories
+        const pages = await getAllChildPages(category.id);
+        const posts = pages.map((block: any) => ({
+            id: block.id.replace(/-/g, ""),
+            title: block.child_page.title,
+            category: category.label || category.name,
+            createdAt: block.created_time,
+        }));
 
         allPosts.push(...posts);
     }
